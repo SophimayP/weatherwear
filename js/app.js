@@ -27,12 +27,9 @@ var data = new Firebase("https://intense-fire-1222.firebaseio.com/");
 
 data.on("value", function(snapshot){
 	var context = snapshot.val();
-
 	var source = $("#home-template").html();
 	var template = Handlebars.compile(source);
 	var html = template(context);
-
-	console.log(html);
 	$("#change").html(html);
 });
 
@@ -99,6 +96,7 @@ if (!xhr) {
   throw new Error('CORS not supported');
 }
 
+console.log(xhr);
 
 /*
 var metServ = "http://metservice.com/publicData/localForecastwellington";
@@ -109,4 +107,3 @@ $.getJSON(metServ, function (json) {
     //Trying to test if working by printing the simple forecast to the console
 });
 */
-
