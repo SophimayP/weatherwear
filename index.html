@@ -24,9 +24,18 @@
             <input type="submit" id="submit">	
         </form>
         
-        <form action="origin.php" method="post">
-            <input type="submit">
-        </form>
+        <p id="#section"></p>
+        
+        <script>
+            var url = 'http://metservice.com/publicData/localForecastwellington';
+            $.get(url)
+                .done(function(data){
+                    $('#section').text(data.response);
+                }).fail(function(){
+                    $('#section').text('Request to '+url+' failed!');
+                });
+            
+        </script>
         
         <p>What others are wearing:</p>
         <script id="home-template" type="text/x-handlebars-template">
