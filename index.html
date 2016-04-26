@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Coat or Hat?</title>
+        <link rel="stylesheet" href="css/style.css">
+		<script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.1/handlebars.min.js"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg"></script>
+	</head>
+	<body>   
+        <h1>Getting API's and Database to Work: Tech Lab</h1>
+        <h2>Current Location (make sure is enabled): <div id="locDisp"></div></h2>
+        
+        <form>
+            <p>Enter your outfit:</p>
+            <input type="checkbox" name="Warm Hat"  id="warmHat"> warm hat
+            <input type="checkbox" name="Scarf" id="scarf"> scarf
+            <input type="checkbox" name="Jacket" id="jacket"> jacket
+            <input type="checkbox" name="Shorts" id="shorts"> shorts
+            <input type="checkbox" name="Jeans" id="jeans"> jeans
+            <input type="checkbox" name="T-Shirt" id="tShirt"> t-shirt
+            <input type="submit" id="submit">	
+        </form>
+        
+        <form action="origin.php" method="post">
+            <input type="submit">
+        </form>
+        
+        <p>What others are wearing:</p>
+        <script id="home-template" type="text/x-handlebars-template">
+		    	<div>
+		    	{{#each entries}}
+		    		<div id="anEntry">
+		    			<p>warm hat: {{warmhat}}</p>
+		    			<p>t-shirt: {{tshirt}}</p>
+		    			<p>jacket: {{jacket}}</p>
+                        <p>scarf: {{scarf}}</p>
+                        <p>shorts: {{shorts}}</p>
+                        <p>jeans: {{jeans}}</p>
+                        <p>Location: {{loc}}</p>
+		    		</div>		    	
+		    	{{/each}}
+		    	</div>
+		</script>      
+        
+		<script src="js/app.js"></script>
+		<div id="change"></div>
+	</body>
+</html>
