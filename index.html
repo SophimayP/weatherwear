@@ -1,137 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-
-  <!-- Basic Page Needs
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta charset="utf-8">
-  <title>Coat or Hat?</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <!-- Mobile Specific Metas
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- FONT
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-
-  <!-- CSS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/flickity.css" media="screen">
-    
-  <!-- JS 
-  -------------------------------------------------- -->
-  <script src="js/flickity.pkgd.min.js"></script>
-  <script type="text/javascript" src="js/jquery-1.12.2.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script>
-    function gettingJSON(){
-        document.write("jquery loaded");
-        $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=London&APPID=ee6596241130f193adf1ba90e625cc10",function(json){
-            document.write(JSON.stringify(json));
-        });
-    }
-    </script>
-
-  <!-- Favicon
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href="images/favicon.png">
-
-</head>
-<body>
-
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
-<div id="content">
-    <h2>Weather API Implemention</h2>
-    <div class="container">
-        <div class="row">
-            <h1 class="text-center">Wellington</h1>
-            <div class="col-sm-6">
-                <h2>Current Conditions</h2>
-                <h3 id="current"></h3>
-            </div>
-            <div class="col-sm-6">
-                <h2>Forecast</h2>
-                <h3 id="forecast"></h3>
-            </div>
-        </div>
-    </div>
-    <script src="js/weather.js"></script>
-    <script>
-        Weather.getCurrent( "Wellington", function( current ) {
-            $( "#current" ).html( "Temperature: " + current.temperature() + "&deg;K or " +
-                Weather.kelvinToFahrenheit( current.temperature() ) + "&deg;F or " +
-                Weather.kelvinToCelsius( current.temperature() ) + "&deg;C" +
-                "<br />Current Conditions: " + current.conditions() );
-        });
-
-        Weather.getForecast( "Wellington", function ( forecast ) {
-            $( "#forecast" ).html( "High: " + forecast.high() + "&deg;K or " +
-                Weather.kelvinToFahrenheit( forecast.high() ) + "&deg;F or " +
-                Weather.kelvinToCelsius( forecast.high() ) + "&deg;C<br />Low: " +
-                forecast.low() + "&deg;K or " +
-                Weather.kelvinToFahrenheit( forecast.low() ) + "&deg;F or " +
-                Weather.kelvinToCelsius( forecast.low() ) + "&deg;C" );
-        });
-    </script>
-    
-    <h2>Geolocation Implementation</h2>
-    <div id="map"></div>
-            <script>
-              // Note: This example requires that you consent to location sharing when
-              // prompted by your browser. If you see the error "The Geolocation service
-              // failed.", it means you probably did not give permission for the browser to
-              // locate you.
-
-              function initMap() {
-                var map = new google.maps.Map(document.getElementById('map'), {
-                  center: {lat: -34.397, lng: 150.644},
-                  zoom: 6
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Coat or Hat?</title>
+        <link rel="stylesheet" href="css/style.css">
+		<script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.1/handlebars.min.js"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg"></script>
+	</head>
+	<body>   
+        <h1>Getting API's and Database to Work: Tech Lab</h1>
+        <h2>Current Location (make sure is enabled): <div id="locDisp"></div></h2>
+        
+        <form>
+            <p>Enter your outfit:</p>
+            <input type="checkbox" name="Warm Hat"  id="warmHat"> warm hat
+            <input type="checkbox" name="Scarf" id="scarf"> scarf
+            <input type="checkbox" name="Jacket" id="jacket"> jacket
+            <input type="checkbox" name="Shorts" id="shorts"> shorts
+            <input type="checkbox" name="Jeans" id="jeans"> jeans
+            <input type="checkbox" name="T-Shirt" id="tShirt"> t-shirt
+            <input type="submit" id="submit">	
+        </form>
+        
+        <p id="section"></p>
+        
+        <script>
+            var url = 'http://sophimayp.github.io/MDDN352-Project2/proxy';
+            $.get(url, {urlToFetch: 'http://metservice.com/publicData/localForecastwellington'})
+                .done(function(data){
+                    $('#section').text(data.response);
+                }).fail(function(){
+                    $('#section').text('Request to '+url+' failed!');
                 });
-                var infoWindow = new google.maps.InfoWindow({map: map});
-
-                // Try HTML5 geolocation.
-                if (navigator.geolocation) {
-                  navigator.geolocation.getCurrentPosition(function(position) {
-                    var pos = {
-                      lat: position.coords.latitude,
-                      lng: position.coords.longitude
-                    };
-
-                    infoWindow.setPosition(pos);
-                    infoWindow.setContent('Location found.');
-                    map.setCenter(pos);
-                  }, function() {
-                    handleLocationError(true, infoWindow, map.getCenter());
-                  });
-                } else {
-                  // Browser doesn't support Geolocation
-                  handleLocationError(false, infoWindow, map.getCenter());
-                }
-              }
-
-              function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-                infoWindow.setPosition(pos);
-                infoWindow.setContent(browserHasGeolocation ?
-                                      'Error: The Geolocation service failed.' :
-                                      'Error: Your browser doesn\'t support geolocation.');
-              }
-            </script>
-            <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg&callback=initMap">
-            </script>
-    
-    <p>Sophie Price // MDDN352 // Project 2 API Implementation // 2016</p>
-</div>
-
-<!-- End Document
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-</body>
+        </script>
+        
+        <p>What others are wearing:</p>
+        <script id="home-template" type="text/x-handlebars-template">
+		    	<div>
+		    	{{#each entries}}
+		    		<div id="anEntry">
+		    			<p>warm hat: {{warmhat}}</p>
+		    			<p>t-shirt: {{tshirt}}</p>
+		    			<p>jacket: {{jacket}}</p>
+                        <p>scarf: {{scarf}}</p>
+                        <p>shorts: {{shorts}}</p>
+                        <p>jeans: {{jeans}}</p>
+                        <p>Location: {{loc}}</p>
+		    		</div>		    	
+		    	{{/each}}
+		    	</div>
+		</script>      
+        
+		<script src="js/app.js"></script>
+		<div id="change"></div>
+	</body>
 </html>
