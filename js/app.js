@@ -1,5 +1,6 @@
-var locData;
 
+/* -------------- GEOLOCATION ------------ */
+var locData;
 //Google Map Key: AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg        
 // Try HTML5 geolocation.
 if (navigator.geolocation) {
@@ -23,8 +24,8 @@ if (navigator.geolocation) {
   });
 }
 
+/* -------------- DATABASE ------------ */
 var data = new Firebase("https://intense-fire-1222.firebaseio.com/");
-
 data.on("value", function(snapshot){
 	var context = snapshot.val();
 	var source = $("#home-template").html();
@@ -67,71 +68,29 @@ $("#submit").click(function(){
 	data.child("entries").push(entry);
 });
 
-//final try
-var express = require('express');
-var http= require('http');
+/* -------------- WEATHER ------------ */
 
-var portNumber = 3000;
-var app = express();
+//Metservice JSON can't seem to be used as has an origin error:  http://metservice.com/publicData/localForecastwellington
 
-app.get('/proxy', function(request, response){
-  	performProxyCall(request.query.urlToFetch, response);
+function gettingJSON(){
+    document.write("jquery loaded");
+    $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=London&APPID=ee6596241130f193adf1ba90e625cc10",function(json){
+        document.write(JSON.stringify(json));
+    });
+}
+
+Weather.getCurrent( "Wellington", function( current ) {
+    $( "#current" ).html( "Temperature: " + current.temperature() + "&deg;K or " +
+        Weather.kelvinToFahrenheit( current.temperature() ) + "&deg;F or " +
+        Weather.kelvinToCelsius( current.temperature() ) + "&deg;C" +
+        "<br />Current Conditions: " + current.conditions() );
 });
 
-function performProxyCall(url, response){
-	http.get(url, function(responseFromOtherDomain) {
-	  	var contentType = responseFromOtherDomain.headers['content-type'];
-		responseFromOtherDomain.on("data", function(responseBody) {
-			response.writeHead(200, {'Content-Type': contentType});
-		    response.end(responseBody);
-	  	});
-	});
-}
-
-app.use(express.static(__dirname)); //serve static content
-
-app.listen(portNumber);
-console.log('Requester with proxy is listening on port '+ portNumber);
-
-/*
-function createCORSRequest(method, url) {
-  var xhr = new XMLHttpRequest();
-  if ("withCredentials" in xhr) {
-
-    // Check if the XMLHttpRequest object has a "withCredentials" property.
-    // "withCredentials" only exists on XMLHTTPRequest2 objects.
-    xhr.open(method, url, true);
-
-  } else if (typeof XDomainRequest != "undefined") {
-
-    // Otherwise, check if XDomainRequest.
-    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
-    xhr = new XDomainRequest();
-    xhr.open(method, url);
-
-  } else {
-
-    // Otherwise, CORS is not supported by the browser.
-    xhr = null;
-
-  }
-  return xhr;
-}
-
-var xhr = createCORSRequest('GET', "http://metservice.com/publicData/localForecastwellington");
-if (!xhr) {
-  throw new Error('CORS not supported');
-}
-
-console.log(xhr);
-*/
-/*
-var metServ = "http://metservice.com/publicData/localForecastwellington";
-
-$.getJSON(metServ, function (json) {
-    var weatherForecast = json.days[0].forecast;
-    console.log('Forecast : ', weatherForecast);
-    //Trying to test if working by printing the simple forecast to the console
+Weather.getForecast( "Wellington", function ( forecast ) {
+    $( "#forecast" ).html( "High: " + forecast.high() + "&deg;K or " +
+        Weather.kelvinToFahrenheit( forecast.high() ) + "&deg;F or " +
+        Weather.kelvinToCelsius( forecast.high() ) + "&deg;C<br />Low: " +
+        forecast.low() + "&deg;K or " +
+        Weather.kelvinToFahrenheit( forecast.low() ) + "&deg;F or " +
+        Weather.kelvinToCelsius( forecast.low() ) + "&deg;C" );
 });
-*/
-
