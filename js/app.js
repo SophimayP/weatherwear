@@ -72,11 +72,10 @@ $("#submit").click(function(){
 
 //Metservice JSON can't seem to be used as has an origin error:  http://metservice.com/publicData/localForecastwellington and Sam Jones was passing it through a proxy which he let me use - hope thats ok as its the same data im receiving all I'm swapping out is the URL and it saves me having to host it on a third party proxy server myself as its just to get pass the origin not being allowed.
 
- var metServ = "http://uni.ey.nz/metservice.php?hourlyObsAndForecast_wellington";
+ var metServ = "http://uni.ey.nz/metservice.php?oneMinObs_wellington";
  
  $.getJSON(metServ, function (json) {
-     var weatherForecast = json.actualData[0].date;
-     console.log('Forecast : ', weatherForecast);
-     //Trying to test if working by printing the simple forecast to the console
+     var weatherForecast = json.temperature;
+     console.log('Temperature : ', weatherForecast);
  });
 
