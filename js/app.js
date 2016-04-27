@@ -70,27 +70,13 @@ $("#submit").click(function(){
 
 /* -------------- WEATHER ------------ */
 
-//Metservice JSON can't seem to be used as has an origin error:  http://metservice.com/publicData/localForecastwellington
+//Metservice JSON can't seem to be used as has an origin error:  http://metservice.com/publicData/localForecastwellington and Sam Jones was passing it through a proxy which he let me use - hope thats ok as its the same data im receiving all I'm swapping out is the URL and it saves me having to host it on a third party proxy server myself as its just to get pass the origin not being allowed.
 
-function gettingJSON(){
-    document.write("jquery loaded");
-    $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=London&APPID=ee6596241130f193adf1ba90e625cc10",function(json){
-        document.write(JSON.stringify(json));
-    });
-}
+ var metServ = "http://uni.ey.nz/metservice.php?hourlyObsAndForecast_wellington";
+ 
+ $.getJSON(metServ, function (json) {
+     var weatherForecast = json.actualData[0].date;
+     console.log('Forecast : ', weatherForecast);
+     //Trying to test if working by printing the simple forecast to the console
+ });
 
-Weather.getCurrent( "Wellington", function( current ) {
-    $( "#current" ).html( "Temperature: " + current.temperature() + "&deg;K or " +
-        Weather.kelvinToFahrenheit( current.temperature() ) + "&deg;F or " +
-        Weather.kelvinToCelsius( current.temperature() ) + "&deg;C" +
-        "<br />Current Conditions: " + current.conditions() );
-});
-
-Weather.getForecast( "Wellington", function ( forecast ) {
-    $( "#forecast" ).html( "High: " + forecast.high() + "&deg;K or " +
-        Weather.kelvinToFahrenheit( forecast.high() ) + "&deg;F or " +
-        Weather.kelvinToCelsius( forecast.high() ) + "&deg;C<br />Low: " +
-        forecast.low() + "&deg;K or " +
-        Weather.kelvinToFahrenheit( forecast.low() ) + "&deg;F or " +
-        Weather.kelvinToCelsius( forecast.low() ) + "&deg;C" );
-});
