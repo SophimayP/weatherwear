@@ -13,7 +13,7 @@ if (navigator.geolocation) {
       if (status == google.maps.GeocoderStatus.OK) {
         for (var location of locations) {
           if ($.inArray('locality', location.types) != -1) {
-            document.getElementById("locDisp").innerHTML = location.address_components[0].short_name;
+            document.getElementById("locDisp").innerHTML = location.address_components[1].short_name;
             var city = location.address_components[0].short_name; //Getting the current city
             city = city.replace(/\s+/g, '-').toLowerCase(); //making lowercase and any spaces change to - so that it will not break URL and cities like New Plymouth become new-plymouth which works with the URL. 
             var metServ = "http://uni.ey.nz/metservice.php?oneMinObs_";
