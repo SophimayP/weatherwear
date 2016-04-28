@@ -23,7 +23,7 @@ if (navigator.geolocation) {
             var jsonURL = metServ + city;
             $.getJSON(jsonURL, function (json) {
              var weatherForecast = json.temperature;
-             console.log('Temperature : ', weatherForecast);
+             document.getElementById("weatherDisp").innerHTML = 'Temperature : ' + weatherForecast;
             });
             break;
           }
