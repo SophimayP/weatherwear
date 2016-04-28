@@ -9,21 +9,18 @@ if (navigator.geolocation) {
       lat: position.coords.latitude,
       lng: position.coords.longitude
     };
-    var city;
     geocoder.geocode({'latLng': pos}, function (locations, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         for (var location of locations) {
           if ($.inArray('locality', location.types) != -1) {
             document.getElementById("locDisp").innerHTML = location.formatted_address;
-            city = location.formatted_address; //Getting the location in format 'City, Country'
-            var n = city.indexOf(','); //Finding the position of the comma
-            city = city.substring(0, n != -1 ? n : city.length); //Deleting everything after and including the comma so is just City.
+            var city = location.address_components[0].short_name; //Getting the current city
             city = city.replace(/\s+/g, '-').toLowerCase(); //making lowercase and any spaces change to - so that it will not break URL and cities like New Plymouth become new-plymouth which works with the URL. 
             var metServ = "http://uni.ey.nz/metservice.php?oneMinObs_";
             var jsonURL = metServ + city;
             $.getJSON(jsonURL, function (json) {
              var weatherForecast = json.temperature;
-             document.getElementById("weatherDisp").innerHTML = weatherForecast;
+             document.getElementById("weatherDisp").innerHTML = 'Temperature : ' + weatherForecast;
             });
             break;
           }
