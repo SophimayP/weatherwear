@@ -1,4 +1,4 @@
-
+var city;
 /* -------------- GEOLOCATION ------------ */
 //Google Map Key: AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg        
 // Try HTML5 geolocation.
@@ -14,8 +14,11 @@ if (navigator.geolocation) {
         for (var location of locations) {
           if ($.inArray('locality', location.types) != -1) {
             document.getElementById("locDisp").innerHTML = location.formatted_address;
-            var city = location.address_components[2].short_name; //Getting the current city
+            city = location.address_components[2].short_name; //Getting the current city
             city = city.replace(/\s+/g, '-').toLowerCase(); //making lowercase and any spaces change to - so that it will not break URL and cities like New Plymouth become new-plymouth which works with the URL. 
+              
+            /* -------------- WEATHER ------------ */
+            //Metservice JSON can't seem to be used as has an origin error:  http://metservice.com/publicData/localForecastwellington and Sam Jones was passing it through a proxy which he let me use - hope thats ok as it's the same data I'm receiving all I'm swapping out is the URL and it saves me having to host it on a third party proxy server myself just to get pass the origin not being allowed.
             var metServ = "http://uni.ey.nz/metservice.php?oneMinObs_";
             var jsonURL = metServ + city;
             $.getJSON(jsonURL, function (json) {
@@ -58,49 +61,60 @@ data.on("value", function(snapshot){
 
 $("#submit").click(function(){
 	var entry = {
-		warmhat: "No",
-		tshirt: "No",
-		scarf: "No",
-        shorts: "No",
-        jacket: "No",
-        jeans: "No",
+        scale: 10.5,
+        rain: "No",
         loc: null
 	}
-    if ($('#warmHat').is(":checked")){
-      entry.warmhat = "Yes";
+    if ($('#rain').is(":checked")){
+      entry.rain = "Yes";
     }
-    if ($('#tShirt').is(":checked")){
-      entry.tshirt = "Yes";
-    }
-    if ($('#scarf').is(":checked")){
-      entry.scarf = "Yes";
-    }
-    if ($('#jacket').is(":checked")){
-      entry.jacket = "Yes";
-    }
-    if ($('#shorts').is(":checked")){
-      entry.shorts = "Yes";
-    }
-    if ($('#jeans').is(":checked")){
-      entry.jeans = "Yes";
-    }
-    entry.loc = locData;
-
-	console.log(entry); //testing info has been placed into object
+    entry.scale = document.getElementById("slider").value;
+    entry.loc = city;
 	data.child("entries").push(entry);
 });
 
-/* -------------- WEATHER ------------ */
 
-//Metservice JSON can't seem to be used as has an origin error:  http://metservice.com/publicData/localForecastwellington and Sam Jones was passing it through a proxy which he let me use - hope thats ok as it's the same data I'm receiving all I'm swapping out is the URL and it saves me having to host it on a third party proxy server myself just to get pass the origin not being allowed.
+/*------------------ SLIDER ---------------------*/
+var $element = $('input[type="range"]');
+var state1 = 1; 
 
-var metServ = "http://uni.ey.nz/metservice.php?hourlyObsAndForecast_";
-/* console.log(city);
-var jsonURL = metServ + city;
+$element
+.rangeslider({
+    polyfill: false,
+    onInit: function() {
+        calcPic(this.value);
+        document.getElementById("sVal").innerHTML = this.value;    
+    }
+})
+.on('input', function() {
+    calcPic(this.value);
+    document.getElementById("sVal").innerHTML = this.value;
+});
 
-$.getJSON(jsonURL, function (json) {
- var weatherForecast = json.actualData[0].temperature;
- console.log('Temperature : ', weatherForecast);
-});*/
+function calcPic(val) {
+    var tempState;
+    if(val <= 0){
+        tempState = 1;
+    }else if(val > 0 && val <= 20){
+        tempState = 2;
+    }else if(val > 20){
+        tempState = 3;
+    }
+    if(tempState != state1){
+        state1 = tempState;
+        updatePic();
+    }
+}
 
-
+function updatePic() {
+    $("#o1").hide();
+    $("#o2").hide();
+    $("#o3").hide();
+    if(state1 == 1){
+        $("#o1").show();
+    }else if(state1 == 2){
+        $("#o2").show();
+    }else if(state1 == 3){
+        $("#o3").show();
+    }
+}
