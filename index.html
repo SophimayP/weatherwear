@@ -9,6 +9,7 @@
         <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/skeleton.css">
+        <link rel="stylesheet" href="css/rangeslider.css">
         <link rel="stylesheet" href="css/style.css">
         
 <!-- ------FAVICON------- -->    
@@ -16,19 +17,19 @@
 	</head>
 	<body>  
 <!-- ------MAIN PAGE LAYOUT------- -->
-        <h1>Getting API's and Database to Work: Tech Lab</h1>
+        <h1>Weather Wear</h1>
         <h2>Current Location (make sure is enabled): <div id="locDisp"></div></h2>
         <h2>Weather API Implemention</h2>
         <h2>Current Temperature: <div id="weatherDisp"></div></h2>
-        <input type="range" min="-20" max="50" step="0.5" value="35"/>
         <form>
-            <p>Enter your outfit:</p>
-            <input type="checkbox" name="Warm Hat"  id="warmHat"> warm hat
-            <input type="checkbox" name="Scarf" id="scarf"> scarf
-            <input type="checkbox" name="Jacket" id="jacket"> jacket
-            <input type="checkbox" name="Shorts" id="shorts"> shorts
-            <input type="checkbox" name="Jeans" id="jeans"> jeans
-            <input type="checkbox" name="T-Shirt" id="tShirt"> t-shirt
+            <p>Enter your outfit:</p>            
+            <img class="oImg" id="o1" src="images/outfits/cold.png">
+            <img class="oImg" id="o2" src="images/outfits/med.png">
+            <img class="oImg" id="o3" src="images/outfits/hot.png">
+            
+            <input id="slider" type="range" min="-20" max="50" step="0.5" value="35"/><br>
+            <p>sliderValue: <div id="sVal"></div></p>
+            <input type="checkbox" name="Rain" id="rain"><p>Taking a raincoat/umbrella?</p>
             <input type="submit" id="submit">	
         </form>
         
@@ -40,12 +41,8 @@
 		    	<div>
 		    	{{#each entries}}
 		    		<div id="anEntry">
-		    			<p>warm hat: {{warmhat}}</p>
-		    			<p>t-shirt: {{tshirt}}</p>
-		    			<p>jacket: {{jacket}}</p>
-                        <p>scarf: {{scarf}}</p>
-                        <p>shorts: {{shorts}}</p>
-                        <p>jeans: {{jeans}}</p>
+		    			<p>Temp: {{scale}}</p>
+                        <p>Took a raincoat/umbrella: {{rain}}</p>
                         <p>Location: {{loc}}</p>
 		    		</div>		    	
 		    	{{/each}}
@@ -55,6 +52,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.1/handlebars.min.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg"></script>
+        <script src="js/rangeslider.min.js"></script>
 		<script src="js/app.js"></script>
 	</body>
 </html>
