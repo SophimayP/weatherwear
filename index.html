@@ -2,16 +2,25 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Coat or Hat?</title>
+		<title>Weather Wear</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+<!--------FONTS AND CSS--------->
+        <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/skeleton.css">
         <link rel="stylesheet" href="css/style.css">
+        
+<!--------FAVICON--------->    
+        <link rel="icon" type="image/png" href="images/favicon.png">
 	</head>
-	<body>   
+	<body>  
+<!--------MAIN PAGE LAYOUT--------->
         <h1>Getting API's and Database to Work: Tech Lab</h1>
         <h2>Current Location (make sure is enabled): <div id="locDisp"></div></h2>
         <h2>Weather API Implemention</h2>
         <h2>Current Temperature: <div id="weatherDisp"></div></h2>
-        <input type="number" min="0" max="1" step="0.1" value="0.5" />
-        <input type="range" min="10" max="1000" step="10" value="300" data-orientation="horizontal"/>
+        <input type="range" min="-20" max="50" step="0.5" value="35"/>
         <form>
             <p>Enter your outfit:</p>
             <input type="checkbox" name="Warm Hat"  id="warmHat"> warm hat
@@ -24,6 +33,9 @@
         </form>
         
         <p>What others are wearing:</p>
+        <div id="change"></div>
+        
+<!--------SCRIPTS AND PLUGINS------->
         <script id="home-template" type="text/x-handlebars-template">
 		    	<div>
 		    	{{#each entries}}
@@ -38,13 +50,9 @@
 		    		</div>		    	
 		    	{{/each}}
 		    	</div>
-		</script>    
-        
-        <div id="change"></div>
-        
+		</script>            
         <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-        <script src="js/rangeslider.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.1/handlebars.min.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg"></script>
 		<script src="js/app.js"></script>
