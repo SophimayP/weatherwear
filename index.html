@@ -99,11 +99,10 @@
 <!-- ------SCRIPTS AND PLUGINS----- -->
         <script id="home-template" type="text/x-handlebars-template">
 		    	<div>
-		    	{{#each entries}}
-		    		<div id="anEntry">
-		    			<p>Temp: {{scale}}</p>
-                        <p>Took a raincoat/umbrella: {{rain}}</p>
-                        <p>Location: {{loc}}</p>
+		    	{{#each wellington}}
+		    		<div class="anEntry">
+                        <div class="entryImg">{{scale}}</div>
+                        <p>Took a raincoat: {{rain}}</p>
 		    		</div>		    	
 		    	{{/each}}
 		    	</div>
