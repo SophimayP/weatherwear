@@ -79,20 +79,24 @@ data.on("value", function(snapshot){
 	var template = Handlebars.compile(source);
 	var html = template(context);
 	$("#change").html(html);
+    $('.entryImg').each(function(i, obj) {
+        var result = document.getElementsByClassName("entryImg")[i].innerHTML;
+        var imgSrc = '<img class="oImg" src="images/outfits/' + result + '.png">'
+        console.log(imgSrc);
+        document.getElementsByClassName("entryImg")[i].innerHTML = imgSrc;
+    });
 });
 
 $("#submit").click(function(){
 	var entry = {
-        scale: 10.5,
+        scale: 5,
         rain: "No",
-        loc: null
 	}
     if ($('#rain').is(":checked")){
       entry.rain = "Yes";
     }
     entry.scale = document.getElementById("slider").value;
-    entry.loc = city;
-	data.child(entries).push(entry);
+	data.child(city).push(entry);
 });
 
 
