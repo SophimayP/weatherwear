@@ -1,6 +1,7 @@
-var city;
 /* -------------- GEOLOCATION ------------ */
-//Google Map Key: AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg        
+var city;
+var cityUpper;
+//Google Map Key: AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg    
 // Try HTML5 geolocation.
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(function(position) {
@@ -13,7 +14,8 @@ if (navigator.geolocation) {
       if (status == google.maps.GeocoderStatus.OK) {
         for (var location of locations) {
           if ($.inArray('locality', location.types) != -1) {
-            document.getElementById("locDisp").innerHTML = location.formatted_address;
+            cityUpper = location.address_components[2].short_name; //passing the current city to be in this div
+            document.getElementById("barLocDisp").innerHTML = cityUpper;
             city = location.address_components[2].short_name; //Getting the current city
             city = city.replace(/\s+/g, '-').toLowerCase(); //making lowercase and any spaces change to - so that it will not break URL and cities like New Plymouth become new-plymouth which works with the URL. 
               
@@ -22,8 +24,44 @@ if (navigator.geolocation) {
             var metServ = "http://uni.ey.nz/metservice.php?oneMinObs_";
             var jsonURL = metServ + city;
             $.getJSON(jsonURL, function (json) {
-             var weatherForecast = json.temperature;
-             document.getElementById("weatherDisp").innerHTML = 'Temperature : ' + weatherForecast;
+             var clothingLayers = json.clothingLayers;
+             $("#1").hide();
+             $("#1to2").hide();
+             $("#2").hide();
+             $("#2to3").hide();
+             $("#3").hide();
+             $("#3to4").hide();
+             if(clothingLayers == "1"){
+                 $("#1").show();
+             }else if(clothingLayers == "1 to 2"){
+                 $("#1to2").show();
+             }else if(clothingLayers == "2"){
+                 $("#2").show();
+             }else if(clothingLayers == "2 to 3"){
+                 $("#2to3").show();
+             }else if(clothingLayers == "3"){
+                 $("#3").show();
+             }else if(clothingLayers == "3 to 4"){
+                 $("#3to4").show();
+             }else{
+                 $("#3to4").show();
+             }
+             var weatherTemp = json.temperature;
+             var windLayers = json.windProofLayers;
+             document.getElementById("barTempDisp").innerHTML = weatherTemp + '°';
+             document.getElementById("weatherDisp").innerHTML = "It's currently " + weatherTemp +" degrees in " + cityUpper + ".";
+             document.getElementById("layersDisp").innerHTML = "MetService recommends " + clothingLayers + " clothing layers and " + windLayers + " windproof layers.";  
+             var rainFall = 5;
+             var rain = false;
+             rainFall = parseInt(json.rainfall);
+             if(rainFall >= 5){
+                 rain = true;
+             }
+             if(rain){
+                 document.getElementById("rainDisp").innerHTML = "There's been " + rainFall + "mm of rainfall today so you might want to take a raincoat.";
+             }else{
+                 document.getElementById("rainDisp").innerHTML = "There's been just " + rainFall + "mm of rainfall today so don't worry about a raincoat.";
+             }
             });
             break;
           }
@@ -32,22 +70,6 @@ if (navigator.geolocation) {
     });
   });
 }
-
-/*function getCurrentLat(callback){
-    if(navigator.geolocation){
-
-        navigator.geolocation.getCurrentPosition(function(position) {
-            callback(position.coords.latitude);
-        });
-    }else{
-        console.log("Unable to access your geolocation");
-    }
-}
-var aLat = getCurrentLat();
-console.log(aLat);
-
-var outCity = getCity();
-console.log(outCity + "outside loop");*/
 
 /* -------------- DATABASE ------------ */
 var data = new Firebase("https://intense-fire-1222.firebaseio.com/");
@@ -70,38 +92,28 @@ $("#submit").click(function(){
     }
     entry.scale = document.getElementById("slider").value;
     entry.loc = city;
-	data.child("entries").push(entry);
+	data.child(entries).push(entry);
 });
 
 
 /*------------------ SLIDER ---------------------*/
 var $element = $('input[type="range"]');
-var state1 = 1; 
+var outfitState = 1; 
 
 $element
 .rangeslider({
     polyfill: false,
     onInit: function() {
-        calcPic(this.value);
-        document.getElementById("sVal").innerHTML = this.value;    
+        calcPic(this.value);  
     }
 })
 .on('input', function() {
     calcPic(this.value);
-    document.getElementById("sVal").innerHTML = this.value;
 });
 
 function calcPic(val) {
-    var tempState;
-    if(val <= 0){
-        tempState = 1;
-    }else if(val > 0 && val <= 20){
-        tempState = 2;
-    }else if(val > 20){
-        tempState = 3;
-    }
-    if(tempState != state1){
-        state1 = tempState;
+    if(val != outfitState){
+        outfitState = val;
         updatePic();
     }
 }
@@ -110,11 +122,64 @@ function updatePic() {
     $("#o1").hide();
     $("#o2").hide();
     $("#o3").hide();
-    if(state1 == 1){
+    $("#o4").hide();
+    $("#o5").hide();
+    $("#o6").hide();
+    $("#o7").hide();
+    $("#o8").hide();
+    $("#o9").hide();
+    if(outfitState == 1){
         $("#o1").show();
-    }else if(state1 == 2){
+    }else if(outfitState == 2){
         $("#o2").show();
-    }else if(state1 == 3){
+    }else if(outfitState == 3){
         $("#o3").show();
+    }else if(outfitState == 4){
+        $("#o4").show();
+    }else if(outfitState == 5){
+        $("#o5").show();
+    }else if(outfitState == 6){
+        $("#o6").show();
+    }else if(outfitState == 7){
+        $("#o7").show();
+    }else if(outfitState == 8){
+        $("#o8").show();
+    }else if(outfitState == 9){
+        $("#o9").show();
     }
 }
+
+/*------------------ DISPLAY ---------------------*/
+$(document).ready(function(){
+    //initial hide the three parts of the app
+    $("#metservData").hide();
+    $("#enterData").hide();
+    $("#othersData").hide();
+    $("#landingPage").show();
+    //when the logo is clicked go to the landing page
+    $("#logo").click(function(){
+        $("#landingPage").show();
+        $("#metservData").hide();
+        $("#enterData").hide();
+        $("#othersData").hide();
+    });
+    //when the respective button is pushed show the element and hide the others
+    $("#metServBtn").click(function(){
+        $("#metservData").show();
+        $("#enterData").hide();
+        $("#othersData").hide();
+        $("#landingPage").hide();
+    });
+    $("#enterDataBtn").click(function(){
+        $("#enterData").show();
+        $("#metservData").hide();
+        $("#othersData").hide();
+        $("#landingPage").hide();
+    });
+    $("#dispOthersBtn").click(function(){
+        $("#othersData").show();
+        $("#enterData").hide();
+        $("#metservData").hide();
+        $("#landingPage").hide();
+    });
+});
