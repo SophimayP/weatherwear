@@ -82,7 +82,6 @@ data.on("value", function(snapshot){
     $('.entryImg').each(function(i, obj) {
         var result = document.getElementsByClassName("entryImg")[i].innerHTML;
         var imgSrc = '<img class="oImg" src="images/outfits/' + result + '.png">'
-        console.log(imgSrc);
         document.getElementsByClassName("entryImg")[i].innerHTML = imgSrc;
     });
 });
