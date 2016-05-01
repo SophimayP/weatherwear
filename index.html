@@ -2,40 +2,100 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Weather Wear</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        
+		<title>WeatherWear</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">     
 <!-- ------FONTS AND CSS------- -->
         <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/skeleton.css">
         <link rel="stylesheet" href="css/rangeslider.css">
-        <link rel="stylesheet" href="css/style.css">
-        
+        <link rel="stylesheet" href="css/style.css">       
 <!-- ------FAVICON------- -->    
         <link rel="icon" type="image/png" href="images/favicon.png">
 	</head>
 	<body>  
 <!-- ------MAIN PAGE LAYOUT------- -->
-        <h1>Weather Wear</h1>
-        <h2>Current Location (make sure is enabled): <div id="locDisp"></div></h2>
-        <h2>Weather API Implemention</h2>
-        <h2>Current Temperature: <div id="weatherDisp"></div></h2>
-        <form>
-            <p>Enter your outfit:</p>            
-            <img class="oImg" id="o1" src="images/outfits/cold.png">
-            <img class="oImg" id="o2" src="images/outfits/med.png">
-            <img class="oImg" id="o3" src="images/outfits/hot.png">
-            
-            <input id="slider" type="range" min="-20" max="50" step="0.5" value="35"/><br>
-            <p>sliderValue: <div id="sVal"></div></p>
-            <input type="checkbox" name="Rain" id="rain"><p>Taking a raincoat/umbrella?</p>
-            <input type="submit" id="submit">	
-        </form>
-        
-        <p>What others are wearing:</p>
-        <div id="change"></div>
-        
+        <div id="headBar">
+            <div class="row">
+                <div class="one-third column">
+                    <div id="barLocDisp" class="headBarTxt">.</div>
+                </div>
+                <div class="one-third column">
+                    <img id="logo" src="images/weatherwear.png">
+                </div>
+                <div class="one-third column">
+                    <div id="barTempDisp" class="headBarTxt">.</div>
+                </div>
+            </div>
+        </div>
+        <div id="navBar">
+            <div id="navContain">
+                <div id="metServBtn" class="navBtn">
+                    <img class="navImg" src="images/metServ.png">
+                </div>  
+                <div id="dispOthersBtn" class="navBtn">
+                    <img class="navImg" src="images/others.png">
+                </div>
+                <div id="enterDataBtn" class="navBtn">
+                    <img class="navImg" src="images/enter.png">
+                </div>
+                <div id="stretchCon"></div>
+            </div>
+        </div>
+        <div id="stretchCon"></div>
+        <div id="landingPage">
+            <h1>Welcome to WeatherWear!</h1>
+            <p>The aim of this web app is to provide a humanised view of weather data - suitable clothing for the day.</p>
+            <p>This is acheived through three different functionalitys:</p>
+            <ul>
+                <li>Check out the recommended clothing layers with data provided by the MetService.</li>
+                <li>See what others in your area are wearing.</li>
+                <li>Help us out and enter your own outfit of the day.</li>
+            </ul>
+            <p>First make sure you have allowed your location and you can see your city in the top left corner and the current temperature in the top right then click any of the three respective icons in the navigation at the top of the page to begin.</p>
+        </div>
+        <div id="metservData">
+            <h1>MetService Outfit</h1>
+            <img class="oImg" id="1" src="images/outfits/4.png">
+            <img class="oImg" id="1to2" src="images/outfits/5.png">
+            <img class="oImg" id="2" src="images/outfits/6.png">
+            <img class="oImg" id="2to3" src="images/outfits/7.png">
+            <img class="oImg" id="3" src="images/outfits/8.png">
+            <img class="oImg" id="3to4" src="images/outfits/9.png">
+            <p><div id="weatherDisp"></div></p>
+            <p><div id="layersDisp"></div></p>
+            <p><div id="rainDisp"></div></p>
+        </div>
+        <div id="othersData">
+            <h1>What Others are Wearing</h1>
+            <div id="change"></div>    
+        </div>
+        <div id="enterData">
+            <form>
+                <h1>Enter your outfit:</h1>     
+
+                <img class="oImg" id="o1" src="images/outfits/1.png">
+                <img class="oImg" id="o2" src="images/outfits/2.png">
+                <img class="oImg" id="o3" src="images/outfits/3.png">
+                <img class="oImg" id="o4" src="images/outfits/4.png">
+                <img class="oImg" id="o5" src="images/outfits/5.png">
+                <img class="oImg" id="o6" src="images/outfits/6.png">
+                <img class="oImg" id="o7" src="images/outfits/7.png">
+                <img class="oImg" id="o8" src="images/outfits/8.png">
+                <img class="oImg" id="o9" src="images/outfits/9.png">
+
+                <div id="sliderBox">
+                    <input id="slider" type="range" min="1" max="9" step="1" value="5"/>
+                </div>
+                <h5>Taking a raincoat/umbrella?</h5>
+                <input type="checkbox" name="Rain" id="rain"><label for="rain"></label>
+                <p></p>
+                <input class="button-primary" type="submit" id="submit">	
+            </form> 
+        </div>
+        <div id="footerBar">
+            <p>Sophie Price // MDDN352 // Project 2 // 2016 // Victoria University of Wellington</p>   
+        </div>     
 <!-- ------SCRIPTS AND PLUGINS----- -->
         <script id="home-template" type="text/x-handlebars-template">
 		    	<div>
