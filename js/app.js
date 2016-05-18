@@ -21,10 +21,10 @@ if (navigator.geolocation) {
               
             /* -------------- WEATHER ------------ */
             //Metservice JSON can't seem to be used as has an origin error:  http://metservice.com/publicData/localForecastwellington and Sam Jones was passing it through a proxy which he let me use - hope thats ok as it's the same data I'm receiving all I'm swapping out is the URL and it saves me having to host it on a third party proxy server myself just to get pass the origin not being allowed.
-            var metServ = "http://uni.ey.nz/metservice.php?oneMinObs_";
+            var metServ = "http://uni.ey.nz/metservice.php?localObs_";
             var jsonURL = metServ + city;
             $.getJSON(jsonURL, function (json) {
-             var clothingLayers = json.clothingLayers;
+             var clothingLayers = json.threeHour.clothingLayers;
              $("#1").hide();
              $("#1to2").hide();
              $("#2").hide();
@@ -46,14 +46,14 @@ if (navigator.geolocation) {
              }else{
                  $("#3to4").show();
              }
-             var weatherTemp = json.temperature;
-             var windLayers = json.windProofLayers;
+             var weatherTemp = json.threeHour.temperature;
+             var windLayers = json.threeHour.windProofLayers;
              document.getElementById("barTempDisp").innerHTML = weatherTemp + '°';
              document.getElementById("weatherDisp").innerHTML = "It's currently " + weatherTemp +" degrees in " + cityUpper + ".";
              document.getElementById("layersDisp").innerHTML = "MetService recommends " + clothingLayers + " clothing layers and " + windLayers + " windproof layers.";  
              var rainFall = 5;
              var rain = false;
-             rainFall = parseInt(json.rainfall);
+             rainFall = parseInt(json.threeHour.rainfall);
              if(rainFall >= 5){
                  rain = true;
              }
