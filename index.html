@@ -100,8 +100,16 @@
             <p>© Sophie Price - All Rights Reserved // Project 2 for MDDN352 // 2016 // Victoria University of Wellington</p>   
         </div>     
 <!-- ------SCRIPTS AND PLUGINS----- -->
-		<div id="handleDisp">
-		</div>          
+        <script id="home-template" type="text/x-handlebars-template">
+		    	<div>
+		    	{{#each wellington}}
+		    		<div class="anEntry">
+                        <div class="entryImg">{{scale}}</div>
+                        <p>Took a raincoat: {{rain}}</p>
+		    		</div>		    	
+		    	{{/each}}
+		    	</div>
+		</script>            
         <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.1/handlebars.min.js"></script>
