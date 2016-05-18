@@ -63,6 +63,7 @@ if (navigator.geolocation) {
                  document.getElementById("rainDisp").innerHTML = "There's been just " + rainFall + "mm of rainfall today so don't worry about a raincoat.";
              }
             });
+            document.getElementById("handleDisp").innerHTML = '<script id="home-template" type="text/x-handlebars-template"><div>{{#each 'city'}}<div class="anEntry"><div class="entryImg">{{scale}}</div><p>Took a raincoat: {{rain}}</p></div>{{/each}}</div></script>';
             break;
           }
         }
