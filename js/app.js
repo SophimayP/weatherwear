@@ -46,7 +46,7 @@ if (navigator.geolocation) {
              }else{
                  $("#3to4").show();
              }
-             var weatherTemp = json.threeHour.temp;
+             var weatherTemp = json.threeHour.temperature;
              var windLayers = json.threeHour.windProofLayers;
              document.getElementById("barTempDisp").innerHTML = weatherTemp + '°';
              document.getElementById("weatherDisp").innerHTML = "It's currently " + weatherTemp +" degrees in " + cityUpper + ".";
