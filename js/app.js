@@ -63,7 +63,7 @@ if (navigator.geolocation) {
                  document.getElementById("rainDisp").innerHTML = "There's been just " + rainFall + "mm of rainfall today so don't worry about a raincoat.";
              }
             });
-            document.getElementById("peopleCity").innerHTML = city;
+            //document.getElementById("peopleCity").innerHTML = city;
             break;
           }
         }
