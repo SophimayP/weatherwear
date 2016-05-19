@@ -77,7 +77,7 @@ var globalData = {};
 var data = new Firebase("https://intense-fire-1222.firebaseio.com/");
 data.on("value", function(snapshot){
     var context = snapshot.val();
-    globalData = context;
+    globalData = data;
 });
 
 function setGLobalDataCity(cityName){
