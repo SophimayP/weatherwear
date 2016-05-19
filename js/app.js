@@ -83,7 +83,7 @@ data.on("value", function(snapshot){
 function setGLobalDataCity(cityName){
     var cityString = 'https://intense-fire-1222.firebaseio.com/' + cityName;
     var cityRef = new Firebase(cityString);
-    globalData.child(currentCity) = push(cityRef);
+    globalData.child(currentCity).push(cityRef);
     render();
 };
 
