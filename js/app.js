@@ -62,7 +62,7 @@ if (navigator.geolocation) {
                  document.getElementById("rainDisp").innerHTML = "There's been just " + rainFall + "mm of rainfall today so don't worry about a raincoat.";
              }
             });
-            setGLobalDataCity(city);  
+            //setGLobalDataCity(city);  
             break;
           }
         }
@@ -73,6 +73,7 @@ if (navigator.geolocation) {
 
 /* -------------- DATABASE ------------ */
 var globalData = new Firebase("https://intense-fire-1222.firebaseio.com/");
+setGLobalDataCity(city); 
 
 function setGLobalDataCity(cityName){
     var cityString = 'https://intense-fire-1222.firebaseio.com/' + cityName;
