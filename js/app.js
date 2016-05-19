@@ -73,7 +73,7 @@ if (navigator.geolocation) {
 
 /* -------------- DATABASE ------------ */
 var globalData = new Firebase("https://intense-fire-1222.firebaseio.com/");
-setGLobalDataCity(city); 
+//setGLobalDataCity(city); 
 
 function setGLobalDataCity(cityName){
     var cityString = 'https://intense-fire-1222.firebaseio.com/' + cityName;
