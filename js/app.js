@@ -18,7 +18,7 @@ if (navigator.geolocation) {
             document.getElementById("barLocDisp").innerHTML = cityUpper;
             city = location.address_components[2].short_name; //Getting the current city
             city = city.replace(/\s+/g, '-').toLowerCase(); //making lowercase and any spaces change to - so that it will not break URL and cities like New Plymouth become new-plymouth which works with the URL. 
-             
+            setGlobalDataCity(city);
             /* -------------- WEATHER ------------ */
             //Metservice JSON can't seem to be used as has an origin error:  http://metservice.com/publicData/localForecastwellington and Sam Jones was passing it through a proxy which he let me use - hope thats ok as it's the same data I'm receiving all I'm swapping out is the URL and it saves me having to host it on a third party proxy server myself just to get pass the origin not being allowed.
             var metServ = "http://uni.ey.nz/metservice.php?localObs_";
@@ -63,7 +63,6 @@ if (navigator.geolocation) {
                  document.getElementById("rainDisp").innerHTML = "There's been just " + rainFall + "mm of rainfall today so don't worry about a raincoat.";
              }
             });
-            //document.getElementById("peopleCity").innerHTML = city;
             break;
           }
         }
@@ -73,19 +72,30 @@ if (navigator.geolocation) {
 }
 
 /* -------------- DATABASE ------------ */
+var globalData = {};
+
 var data = new Firebase("https://intense-fire-1222.firebaseio.com/");
 data.on("value", function(snapshot){
 	var context = snapshot.val();
-	var source = $("#home-template").html();
-	var template = Handlebars.compile(source);
-	var html = template(context);
-	$("#change").html(html);
+    globalData = context;
+});
+
+function setGLobalDataCity(cityName){
+    globalData.currentCity = cityName;
+    render();
+};
+
+function render(){
+    var source = $("#home-template").html();
+    var template = Handlebars.compile(source);
+    var html = template(globalData.currentCity);
+    $("#change").html(html);
     $('.entryImg').each(function(i, obj) {
         var result = document.getElementsByClassName("entryImg")[i].innerHTML;
         var imgSrc = '<img class="oImg" src="images/outfits/' + result + '.png">'
         document.getElementsByClassName("entryImg")[i].innerHTML = imgSrc;
     });
-});
+};
 
 $("#submit").click(function(){
 	var entry = {
