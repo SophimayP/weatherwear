@@ -72,13 +72,7 @@ if (navigator.geolocation) {
 }
 
 /* -------------- DATABASE ------------ */
-var globalData = {};
-
-var data = new Firebase("https://intense-fire-1222.firebaseio.com/");
-data.on("value", function(snapshot){
-    var context = snapshot.val();
-    globalData = data;
-});
+var globalData = new Firebase("https://intense-fire-1222.firebaseio.com/");
 
 function setGLobalDataCity(cityName){
     var cityString = 'https://intense-fire-1222.firebaseio.com/' + cityName;
@@ -88,9 +82,12 @@ function setGLobalDataCity(cityName){
 };
 
 function render(){
+    globalData.on("value", function(snapshot){
+        var context = snapshot.val();
+    });
     var source = $("#home-template").html();
     var template = Handlebars.compile(source);
-    var html = template(globalData.currentCity);
+    var html = template(context);
     $("#change").html(html);
     $('.entryImg').each(function(i, obj) {
         var result = document.getElementsByClassName("entryImg")[i].innerHTML;
@@ -108,7 +105,7 @@ $("#submit").click(function(){
       entry.rain = "Yes";
     }
     entry.scale = document.getElementById("slider").value;
-    data.child(city).push(entry);
+    globalData.child(city).push(entry);
 });
 
 
