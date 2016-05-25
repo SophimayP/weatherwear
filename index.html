@@ -19,6 +19,13 @@
             <div class="row">
                 <div class="one-third column">
                     <div id="barLocDisp" class="headBarTxt">.</div>
+                    <select id="inputCity" name="cityEnter">
+	                   <option value="Wellington">Wellington</option>
+                       <option value="Invercargill">Invercargill</option>
+	                   <option value="Auckland">Auckland</option>
+	                   <option value="Nelson">Nelson</option>
+                    </select>
+<!--                    <button id="cityBtn">Change</button>-->
                 </div>
                 <div class="one-third column">
                     <img id="logo" src="images/weatherwear.png">
@@ -98,11 +105,12 @@
         </div>
         <div id="footerBar">
             <p>© Sophie Price - All Rights Reserved // Project 2 for MDDN352 // 2016 // Victoria University of Wellington</p>   
-        </div>     
+        </div> 
+
 <!-- ------SCRIPTS AND PLUGINS----- -->
         <script id="home-template" type="text/x-handlebars-template">
-		    	<div>
-		    	{{#each currentCity}}
+		    	<div class="grid">
+		    	{{#each userEntries}}
 		    		<div class="anEntry">
                         <div class="entryImg">{{scale}}</div>
                         <p>Took a raincoat: {{rain}}</p>
@@ -114,7 +122,9 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.1/handlebars.min.js"></script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg"></script>
-        <script src="js/rangeslider.min.js"></script>
-		<script src="js/app.js"></script>
+        <script src="js/rangeslider.min.js"></script>   
+        <script src="js/packery.pkgd.min.js"></script>
+        <script src="js/draggabilly.pkgd.min.js"></script>
+        <script src="js/new.js"></script> 
 	</body>
 </html>
