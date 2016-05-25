@@ -1,5 +1,5 @@
 var globalData = {
-    currentCity : null,
+    currentCity : "Wellington",
     weatherData : {
         temperature: null,
         clothingLayers: null,
@@ -23,6 +23,8 @@ function getGeolocation(){
             for (var location of locations) {
               if ($.inArray('locality', location.types) != -1) {
                 globalData.currentCity = location.address_components[2].short_name; 
+                getWeatherData(); 
+                getFirebaseData();
                 break;
               }
             }
@@ -33,12 +35,9 @@ function getGeolocation(){
 }
 
 function getFirebaseData(){
-    //var fireURL = globalData.currentCity;
-    var fireURL = "Wellington";
+    var fireURL = globalData.currentCity;
     fireURL = fireURL.replace(/\s+/g, '-').toLowerCase();
-    var fireHtml = "https://intense-fire-1222.firebaseio.com/" + fireURL +"/";
-    //var fireHtml = "https://intense-fire-1222.firebaseio.com/";
-    var data = new Firebase(fireHtml);
+    var data = new Firebase("https://intense-fire-1222.firebaseio.com/" + fireURL +"/");
     data.on("value", function(snapshot){
         globalData.othersData = snapshot.val();
         render();
@@ -60,6 +59,7 @@ function getWeatherData(){
         if(globalData.weatherData.rainFall >= 5){
          globalData.weatherData.rain = true;
         }
+        render();
     });
 }
 
@@ -95,7 +95,6 @@ function render(){
      }else{
          document.getElementById("rainDisp").innerHTML = "There's been just " + globalData.weatherData.rainFall + "mm of rainfall today so don't worry about a raincoat.";
      }
-    
  
     //Others Data Display
     var source = $("#home-template").html();
@@ -120,19 +119,6 @@ function render(){
       $grid.packery( 'bindDraggabillyEvents', draggie );
     });
 }
-
-$("#submit").click(function(){
-    var data2 = new Firebase("https://intense-fire-1222.firebaseio.com/wellington/"); 
-	var entry = {
-        scale: 5,
-        rain: "No",
-	}
-    if ($('#rain').is(":checked")){
-      entry.rain = "Yes";
-    }
-    entry.scale = document.getElementById("slider").value;
-	data2.child("userEntries").push(entry); //puts the data in an entry underneath userentries underneath wellington so that the handles variable can just be userentries which will work for all citys instead of having to change the city name inside the template.
-});
 
 
 /*------------------ SLIDER ---------------------*/
@@ -192,21 +178,11 @@ function updatePic() {
 $(document).ready(function(){
     //load the different information into globaldata
     getGeolocation();
-    getFirebaseData();
-    if(globalData.currentCity != null){
-        getWeatherData(); 
-        //if(globalData.weatherData.temperature != null){}
-        getFirebaseData();
-    }
     
     $("#inputCity").change(function () {
         globalData.currentCity = $(this).val();
         getWeatherData();
-        if(globalData.weatherData.temperature != null){
-            render();
-        }
         getFirebaseData();
-        //render();
     });
     
     //initial hide the three parts of the app
@@ -239,6 +215,21 @@ $(document).ready(function(){
         $("#enterData").hide();
         $("#metservData").hide();
         $("#landingPage").hide();
+    });
+    
+    $("#submit").click(function(){
+        var cityLower = globalData.currentCity;
+        cityLower = cityLower.replace(/\s+/g, '-').toLowerCase();
+        var fireRef = new Firebase("https://intense-fire-1222.firebaseio.com/" + cityLower + "/"); 
+        var entry = {
+            scale: 5,
+            rain: "No",
+        }
+        if ($('#rain').is(":checked")){
+          entry.rain = "Yes";
+        }
+        entry.scale = document.getElementById("slider").value;
+        fireRef.child("userEntries").push(entry); //puts the data in an entry underneath userentries underneath wellington so that the handles variable can just be userentries which will work for all citys instead of having to change the city name inside the template.
     });
       
 });
