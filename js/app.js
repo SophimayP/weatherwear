@@ -18,10 +18,20 @@ if (navigator.geolocation) {
             document.getElementById("barLocDisp").innerHTML = cityUpper;
             city = location.address_components[2].short_name; //Getting the current city
             city = city.replace(/\s+/g, '-').toLowerCase(); //making lowercase and any spaces change to - so that it will not break URL and cities like New Plymouth become new-plymouth which works with the URL. 
-            /* -------------- WEATHER ------------ */
+            getWeatherData(city);
+            break;
+          }
+        }
+      }
+    });
+  });
+}
+
+function getWeatherData(aCity){
+	/* -------------- WEATHER ------------ */
             //Metservice JSON can't seem to be used as has an origin error:  http://metservice.com/publicData/localForecastwellington and Sam Jones was passing it through a proxy which he let me use - hope thats ok as it's the same data I'm receiving all I'm swapping out is the URL and it saves me having to host it on a third party proxy server myself just to get pass the origin not being allowed.
             var metServ = "http://uni.ey.nz/metservice.php?localObs_";
-            var jsonURL = metServ + city;
+            var jsonURL = metServ + aCity;
             $.getJSON(jsonURL, function (json) {
              var clothingLayers = json.threeHour.clothingLayers;
              $("#1").hide();
@@ -62,52 +72,56 @@ if (navigator.geolocation) {
                  document.getElementById("rainDisp").innerHTML = "There's been just " + rainFall + "mm of rainfall today so don't worry about a raincoat.";
              }
             });
-            setGLobalDataCity(city);  
-            break;
-          }
-        }
-      }
-    });
-  });
 }
-
 /* -------------- DATABASE ------------ */
-var globalData = new Firebase("https://intense-fire-1222.firebaseio.com/");
-setGLobalDataCity(city); 
-
-function setGLobalDataCity(cityName){
-    var cityString = 'https://intense-fire-1222.firebaseio.com/' + cityName;
-    var cityRef = new Firebase(cityString);
-    globalData.child(currentCity).push(cityRef);
-    render();
-};
-
-function render(){
-    globalData.on("value", function(snapshot){
-        var context = snapshot.val();
-        console.log(context);
-    });
-    var source = $("#home-template").html();
-    var template = Handlebars.compile(source);
-    var html = template(context);
-    $("#change").html(html);
+var data = new Firebase("https://intense-fire-1222.firebaseio.com/");
+data.on("value", function(snapshot){
+	var context = snapshot.val();
+	var source = $("#home-template").html();
+    console.log(context);
+	var template = Handlebars.compile(source);
+	var html = template(context);
+	$("#change").html(html);
     $('.entryImg').each(function(i, obj) {
         var result = document.getElementsByClassName("entryImg")[i].innerHTML;
-        var imgSrc = '<img class="oImg" src="images/outfits/' + result + '.png">'
+        var imgSrc = '<img class="othersImg" src="images/outfits/' + result + '.png">'
         document.getElementsByClassName("entryImg")[i].innerHTML = imgSrc;
     });
-};
+    $( ".anEntry" ).addClass( "grid-item" );
+    var $grid = $('.grid').packery({
+      itemSelector: '.grid-item',
+      columnWidth: 100
+    });
+
+    // make all grid-items draggable
+    $grid.find('.grid-item').each( function( i, gridItem ) {
+      var draggie = new Draggabilly( gridItem );
+      // bind drag events to Packery
+      $grid.packery( 'bindDraggabillyEvents', draggie );
+    });
+    
+//    var $grid = $('.grid').packery({
+//      itemSelector: '.grid-item'
+//    });
+//
+//    $grid.on( 'click', '.grid-item', function( event ) {
+//      // change size of item by toggling large class
+//      $(  event.currentTarget  ).toggleClass('grid-item--large');
+//      // trigger layout after item size changes
+//      $grid.packery('layout');
+//    });
+});
 
 $("#submit").click(function(){
-    var entry = {
+	var entry = {
         scale: 5,
         rain: "No",
-    }
+	}
     if ($('#rain').is(":checked")){
       entry.rain = "Yes";
     }
     entry.scale = document.getElementById("slider").value;
-    globalData.child(city).push(entry);
+	data.child(city).push(entry);
 });
 
 
@@ -197,4 +211,22 @@ $(document).ready(function(){
         $("#metservData").hide();
         $("#landingPage").hide();
     });
+    
+    $("#cityBtn").click(function() {
+	var text = $("#inputCity").val();
+	document.getElementById("barLocDisp").innerHTML = text;
+	city = text;
+	cityUpper = text;
+	getWeatherData(text);
+    });
+    
+    
+    aFunct(2, function(bits){
+        console.log(bits);  //callback eg
+    });
 });
+
+function aFunct(number, callback){
+    var bit = number +1;   //callback experiment
+    callback(bit);
+};
