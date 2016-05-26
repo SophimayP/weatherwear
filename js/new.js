@@ -35,9 +35,6 @@ function getGeolocation(){
 }
 
 function getFirebaseData(){
-	if(globalData.currentCity.equals("locate")){
-		getGeolocation();
-	}
     var fireURL = globalData.currentCity;
     fireURL = fireURL.replace(/\s+/g, '-').toLowerCase();
     var data = new Firebase("https://intense-fire-1222.firebaseio.com/" + fireURL +"/");
@@ -48,9 +45,6 @@ function getFirebaseData(){
 }
 
 function getWeatherData(){
-	if(globalData.currentCity.equals("locate")){
-		getGeolocation();
-	}
     var metServ = "http://uni.ey.nz/metservice.php?localObs_";
     var cityURL = globalData.currentCity;
     cityURL = cityURL.replace(/\s+/g, '-').toLowerCase(); //making lowercase and any spaces change to - so that it will not break URL and cities like New Plymouth become new-plymouth which works with the URL. 
@@ -186,13 +180,6 @@ $(document).ready(function(){
     getGeolocation();
     
     $("#inputCity").change(function () {
-    	/*if($(this).val().equals("locate")){
-    		getGeolocation();
-    	}else{
-	        globalData.currentCity = $(this).val();
-	        getWeatherData();
-	        getFirebaseData();
-    	}*/
     	globalData.currentCity = $(this).val();
         getWeatherData();
         getFirebaseData();
