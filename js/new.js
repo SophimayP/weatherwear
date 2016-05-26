@@ -180,9 +180,13 @@ $(document).ready(function(){
     getGeolocation();
     
     $("#inputCity").change(function () {
-        globalData.currentCity = $(this).val();
-        getWeatherData();
-        getFirebaseData();
+    	if($(this).val().equals("locate")){
+    		getGeolocation();
+    	}else{
+	        globalData.currentCity = $(this).val();
+	        getWeatherData();
+	        getFirebaseData();
+    	}
     });
     
     //initial hide the three parts of the app
