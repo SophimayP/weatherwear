@@ -1,5 +1,24 @@
 /* ------------ MAIN ------------ */
-
+select {
+        position: absolute;
+        margin: 0;
+        margin-left: 50%;
+        left: -45%;
+        width: 90%;
+        border-radius: 0;
+        padding: 5px;
+        padding-left: 9px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 10pt;
+        font-weight: 700;
+        color: white;
+        background-color: #36B3FF;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        cursor: pointer;
+    }
+    
 #headBar{
     background-color: #4738D8;
     padding: 5px 0 5px 0;
