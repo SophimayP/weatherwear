@@ -59,11 +59,11 @@ function getWeatherData(){
         globalData.weatherData.temperature = json.threeHour.temp;
         globalData.weatherData.clothingLayers = json.threeHour.clothingLayers;
         globalData.weatherData.windLayers = json.threeHour.windProofLayers;
-        globalData.weatherData.rainFall = 5;
         globalData.weatherData.rain = false;
-        globalData.weatherData.rainFall = parseInt(json.threeHour.rainfall);
-        if(globalData.weatherData.rainFall >= 5){
-         globalData.weatherData.rain = true;
+        globalData.weatherData.rainFall = parseFloat(json.threeHour.rainfall);
+        console.log(globalData.weatherData.rainFall);
+        if(globalData.weatherData.rainFall > 0.2){
+         globalData.weatherData.rain = true;         
         }
         render();
     });
@@ -97,9 +97,9 @@ function render(){
     document.getElementById("weatherDisp").innerHTML = "It's currently " + globalData.weatherData.temperature +" degrees in " + globalData.currentCity + ".";
     document.getElementById("layersDisp").innerHTML = "MetService recommends " + globalData.weatherData.clothingLayers + " clothing layers and " + globalData.weatherData.windLayers + " windproof layers.";  
     if(globalData.weatherData.rain){
-         document.getElementById("rainDisp").innerHTML = "There's been " + globalData.weatherData.rainFall + "mm of rainfall today so you might want to take a raincoat.";
+         document.getElementById("rainDisp").innerHTML = "There's been " + globalData.weatherData.rainFall + "mm of rainfall in the last three hours so you might want to take a raincoat.";
      }else{
-         document.getElementById("rainDisp").innerHTML = "There's been just " + globalData.weatherData.rainFall + "mm of rainfall today so don't worry about a raincoat.";
+         document.getElementById("rainDisp").innerHTML = "There's been " + globalData.weatherData.rainFall + "mm of rainfall in the the last three hours so don't worry about a raincoat.";
      }
  
     //Others Data Display
