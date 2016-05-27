@@ -132,6 +132,7 @@ select {
 
 .grid-item:hover {
   background: #2D1EC9;
+    cursor: pointer;
 }
 
 .othersImg{
