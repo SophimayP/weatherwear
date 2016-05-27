@@ -113,17 +113,6 @@ function render(){
         var imgSrc = '<img class="othersImg" src="images/outfits/' + result + '.png">'
         document.getElementsByClassName("entryImg")[i].innerHTML = imgSrc;
     });
-    $( ".anEntry" ).addClass( "grid-item" );
-    var $grid = $('.grid').packery({
-      itemSelector: '.grid-item',
-      columnWidth: 100
-    });
-    // make all grid-items draggable
-    $grid.find('.grid-item').each( function( i, gridItem ) {
-      var draggie = new Draggabilly( gridItem );
-      // bind drag events to Packery
-      $grid.packery( 'bindDraggabillyEvents', draggie );
-    });
 }
 
 
@@ -224,6 +213,11 @@ $(document).ready(function(){
         $("#enterData").hide();
         $("#metservData").hide();
         $("#landingPage").hide();
+        $( ".anEntry" ).addClass( "grid-item" );
+        var $grid = $('.grid').packery({
+          itemSelector: '.grid-item',
+          columnWidth: 100
+        });
     });
     
     $("#submit").click(function(){
