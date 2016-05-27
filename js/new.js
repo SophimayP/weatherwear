@@ -1,5 +1,5 @@
 var globalData = {
-    currentCity : "Wellington",
+    currentCity : null,
     weatherData : {
         temperature: null,
         clothingLayers: null,
@@ -23,6 +23,7 @@ function getGeolocation(){
             for (var location of locations) {
               if ($.inArray('locality', location.types) != -1) {
                 globalData.currentCity = location.address_components[2].short_name; 
+                globalData.geoCity = location.address_components[2].short_name; //Means that when a user switches back to locate automatically there location is already stored 
                 getWeatherData(); 
                 getFirebaseData();
                 break;
@@ -181,6 +182,9 @@ $(document).ready(function(){
     
     $("#inputCity").change(function () {
     	globalData.currentCity = $(this).val();
+        if(globalData.currentCity == "locate"){
+            getGeolocation();
+        }
         getWeatherData();
         getFirebaseData();
     });
