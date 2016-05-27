@@ -32,9 +32,9 @@ function getGeolocation(){
           }
         });
       }, function (error) { 
-	if (error.code == error.PERMISSION_DENIED)
-		alert("Geolocation has not been enabled! Please enable or set your location manually using the dropdown menu.");
-	});
+        if (error.code == error.PERMISSION_DENIED)
+            alert("Geolocation has not been enabled! Please enable or set your location manually using the dropdown menu.");
+        });
     }else{
         alert("Sorry your browser does not support geolocation! Please switch browsers or set your location manually using the dropdown menu.");
     }
@@ -120,14 +120,12 @@ function render(){
 var $element = $('input[type="range"]');
 var outfitState = 1; 
 
-$element
-.rangeslider({
+$element.rangeslider({
     polyfill: false,
     onInit: function() {
         calcPic(this.value);  
     }
-})
-.on('input', function() {
+}).on('input', function() {
     calcPic(this.value);
 });
 
@@ -216,8 +214,21 @@ $(document).ready(function(){
         $( ".anEntry" ).addClass( "grid-item" );
         var $grid = $('.grid').packery({
           itemSelector: '.grid-item',
+          gutter: 0,
           columnWidth: 100
         });
+        $grid.on( 'click', '.grid-item', function( event ) {
+          // change size of item by toggling large class
+          $(  event.currentTarget  ).toggleClass('grid-item--width2');
+          // trigger layout after item size changes
+          $grid.packery('layout');
+        });
+//        $(".grid-item").hover(function() {
+//          // change size of item by toggling large class
+//          $(this).toggleClass('grid-item--width2');
+//          // trigger layout after item size changes
+//          $grid.packery('layout');
+//        });
     });
     
     $("#submit").click(function(){
