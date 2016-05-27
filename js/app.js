@@ -1,86 +1,112 @@
-/* -------------- GEOLOCATION ------------ */
-var city;
-var cityUpper;
-//Google Map Key: AIzaSyDZ7402uvsGRTOP_pqKkRm3fjWXbeIJ7pg    
-// Try HTML5 geolocation.
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(function(position) {
-    var geocoder = new google.maps.Geocoder;
-    var pos = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    };
-    geocoder.geocode({'latLng': pos}, function (locations, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-        for (var location of locations) {
-          if ($.inArray('locality', location.types) != -1) {
-            cityUpper = location.address_components[2].short_name; //passing the current city to be in this div
-            document.getElementById("barLocDisp").innerHTML = cityUpper;
-            city = location.address_components[2].short_name; //Getting the current city
-            city = city.replace(/\s+/g, '-').toLowerCase(); //making lowercase and any spaces change to - so that it will not break URL and cities like New Plymouth become new-plymouth which works with the URL. 
-            getWeatherData(city);
-            break;
+var globalData = {
+    currentCity : null,
+    weatherData : {
+        temperature: null,
+        clothingLayers: null,
+        windLayers: null,
+        rainFall: null,
+        rain: null
+    },
+    othersData : {}
+};
+
+function getGeolocation(){
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var geocoder = new google.maps.Geocoder;
+        var pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        geocoder.geocode({'latLng': pos}, function (locations, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            for (var location of locations) {
+              if ($.inArray('locality', location.types) != -1) {
+                globalData.currentCity = location.address_components[2].short_name; 
+                globalData.geoCity = location.address_components[2].short_name; //Means that when a user switches back to locate automatically there location is already stored 
+                getWeatherData(); 
+                getFirebaseData();
+                break;
+              }
+            }
           }
-        }
-      }
-    });
-  });
+        });
+      }, function (error) { 
+	if (error.code == error.PERMISSION_DENIED)
+		console.log("Geolocation has not been enabled! Please enable or set your location manually using the dropdown menu.");
+	});
+    }else{
+        alert("Sorry your browser does not support geolocation! Please switch browsers or set your location manually using the dropdown menu.");
+    }
 }
 
-function getWeatherData(aCity){
-	/* -------------- WEATHER ------------ */
-            //Metservice JSON can't seem to be used as has an origin error:  http://metservice.com/publicData/localForecastwellington and Sam Jones was passing it through a proxy which he let me use - hope thats ok as it's the same data I'm receiving all I'm swapping out is the URL and it saves me having to host it on a third party proxy server myself just to get pass the origin not being allowed.
-            var metServ = "http://uni.ey.nz/metservice.php?localObs_";
-            var jsonURL = metServ + aCity;
-            $.getJSON(jsonURL, function (json) {
-             var clothingLayers = json.threeHour.clothingLayers;
-             $("#1").hide();
-             $("#1to2").hide();
-             $("#2").hide();
-             $("#2to3").hide();
-             $("#3").hide();
-             $("#3to4").hide();
-             if(clothingLayers == "1"){
-                 $("#1").show();
-             }else if(clothingLayers == "1 to 2"){
-                 $("#1to2").show();
-             }else if(clothingLayers == "2"){
-                 $("#2").show();
-             }else if(clothingLayers == "2 to 3"){
-                 $("#2to3").show();
-             }else if(clothingLayers == "3"){
-                 $("#3").show();
-             }else if(clothingLayers == "3 to 4"){
-                 $("#3to4").show();
-             }else{
-                 $("#3to4").show();
-             }
-             var weatherTemp = json.threeHour.temp;
-             var windLayers = json.threeHour.windProofLayers;
-             document.getElementById("barTempDisp").innerHTML = weatherTemp + '°';
-             document.getElementById("weatherDisp").innerHTML = "It's currently " + weatherTemp +" degrees in " + cityUpper + ".";
-             document.getElementById("layersDisp").innerHTML = "MetService recommends " + clothingLayers + " clothing layers and " + windLayers + " windproof layers.";  
-             var rainFall = 5;
-             var rain = false;
-             rainFall = parseInt(json.threeHour.rainfall);
-             if(rainFall >= 5){
-                 rain = true;
-             }
-             if(rain){
-                 document.getElementById("rainDisp").innerHTML = "There's been " + rainFall + "mm of rainfall today so you might want to take a raincoat.";
-             }else{
-                 document.getElementById("rainDisp").innerHTML = "There's been just " + rainFall + "mm of rainfall today so don't worry about a raincoat.";
-             }
-            });
+function getFirebaseData(){
+    var fireURL = globalData.currentCity;
+    fireURL = fireURL.replace(/\s+/g, '-').toLowerCase();
+    var data = new Firebase("https://intense-fire-1222.firebaseio.com/" + fireURL +"/");
+    data.on("value", function(snapshot){
+        globalData.othersData = snapshot.val();
+        render();
+    }); 
 }
-/* -------------- DATABASE ------------ */
-var data = new Firebase("https://intense-fire-1222.firebaseio.com/");
-data.on("value", function(snapshot){
-	var context = snapshot.val();
-	var source = $("#home-template").html();
-    console.log(context);
+
+function getWeatherData(){
+    var metServ = "http://uni.ey.nz/metservice.php?localObs_";
+    var cityURL = globalData.currentCity;
+    cityURL = cityURL.replace(/\s+/g, '-').toLowerCase(); //making lowercase and any spaces change to - so that it will not break URL and cities like New Plymouth become new-plymouth which works with the URL. 
+    var jsonURL = metServ + cityURL;
+    $.getJSON(jsonURL, function (json) {
+        globalData.weatherData.temperature = json.threeHour.temp;
+        globalData.weatherData.clothingLayers = json.threeHour.clothingLayers;
+        globalData.weatherData.windLayers = json.threeHour.windProofLayers;
+        globalData.weatherData.rain = false;
+        globalData.weatherData.rainFall = parseFloat(json.threeHour.rainfall);
+        console.log(globalData.weatherData.rainFall);
+        if(globalData.weatherData.rainFall > 0.2){
+         globalData.weatherData.rain = true;         
+        }
+        render();
+    });
+}
+
+function render(){
+    document.getElementById("barLocDisp").innerHTML = globalData.currentCity;
+    //Weather Display
+    $("#1").hide();
+    $("#1to2").hide();
+    $("#2").hide();
+    $("#2to3").hide();
+    $("#3").hide();
+    $("#3to4").hide();
+    if(globalData.weatherData.clothingLayers == "1"){
+        $("#1").show();
+    }else if(globalData.weatherData.clothingLayers == "1 to 2"){
+        $("#1to2").show();
+    }else if(globalData.weatherData.clothingLayers == "2"){
+        $("#2").show();
+    }else if(globalData.weatherData.clothingLayers == "2 to 3"){
+        $("#2to3").show();
+    }else if(globalData.weatherData.clothingLayers == "3"){
+        $("#3").show();
+    }else if(globalData.weatherData.clothingLayers == "3 to 4"){
+        $("#3to4").show();
+    }else{
+        $("#3to4").show();
+    }
+    document.getElementById("barTempDisp").innerHTML = globalData.weatherData.temperature + '°';
+    document.getElementById("weatherDisp").innerHTML = "It's currently " + globalData.weatherData.temperature +" degrees in " + globalData.currentCity + ".";
+    document.getElementById("layersDisp").innerHTML = "MetService recommends " + globalData.weatherData.clothingLayers + " clothing layers and " + globalData.weatherData.windLayers + " windproof layers.";  
+    if(globalData.weatherData.rain){
+         document.getElementById("rainDisp").innerHTML = "There's been " + globalData.weatherData.rainFall + "mm of rainfall in the last three hours so you might want to take a raincoat.";
+     }else{
+         document.getElementById("rainDisp").innerHTML = "There's been " + globalData.weatherData.rainFall + "mm of rainfall in the the last three hours so don't worry about a raincoat.";
+     }
+ 
+    //Others Data Display
+    var source = $("#home-template").html();
 	var template = Handlebars.compile(source);
-	var html = template(context);
+    console.log(globalData.othersData);
+	var html = template(globalData.othersData);
 	$("#change").html(html);
     $('.entryImg').each(function(i, obj) {
         var result = document.getElementsByClassName("entryImg")[i].innerHTML;
@@ -92,37 +118,13 @@ data.on("value", function(snapshot){
       itemSelector: '.grid-item',
       columnWidth: 100
     });
-
     // make all grid-items draggable
     $grid.find('.grid-item').each( function( i, gridItem ) {
       var draggie = new Draggabilly( gridItem );
       // bind drag events to Packery
       $grid.packery( 'bindDraggabillyEvents', draggie );
     });
-    
-//    var $grid = $('.grid').packery({
-//      itemSelector: '.grid-item'
-//    });
-//
-//    $grid.on( 'click', '.grid-item', function( event ) {
-//      // change size of item by toggling large class
-//      $(  event.currentTarget  ).toggleClass('grid-item--large');
-//      // trigger layout after item size changes
-//      $grid.packery('layout');
-//    });
-});
-
-$("#submit").click(function(){
-	var entry = {
-        scale: 5,
-        rain: "No",
-	}
-    if ($('#rain').is(":checked")){
-      entry.rain = "Yes";
-    }
-    entry.scale = document.getElementById("slider").value;
-	data.child(city).push(entry);
-});
+}
 
 
 /*------------------ SLIDER ---------------------*/
@@ -180,6 +182,18 @@ function updatePic() {
 
 /*------------------ DISPLAY ---------------------*/
 $(document).ready(function(){
+    //load the different information into globaldata
+    getGeolocation();
+    
+    $("#inputCity").change(function () {
+    	globalData.currentCity = $(this).val();
+        if(globalData.currentCity == "locate"){
+            getGeolocation();
+        }
+        getWeatherData();
+        getFirebaseData();
+    });
+    
     //initial hide the three parts of the app
     $("#metservData").hide();
     $("#enterData").hide();
@@ -212,21 +226,20 @@ $(document).ready(function(){
         $("#landingPage").hide();
     });
     
-    $("#cityBtn").click(function() {
-	var text = $("#inputCity").val();
-	document.getElementById("barLocDisp").innerHTML = text;
-	city = text;
-	cityUpper = text;
-	getWeatherData(text);
+    $("#submit").click(function(){
+        var cityLower = globalData.currentCity;
+        cityLower = cityLower.replace(/\s+/g, '-').toLowerCase();
+        var fireRef = new Firebase("https://intense-fire-1222.firebaseio.com/" + cityLower + "/"); 
+        var entry = {
+            scale: 5,
+            rain: "No",
+        }
+        if ($('#rain').is(":checked")){
+          entry.rain = "Yes";
+        }
+        entry.scale = document.getElementById("slider").value;
+        fireRef.child("userEntries").push(entry); //puts the data in an entry underneath userentries underneath wellington so that the handles variable can just be userentries which will work for all citys instead of having to change the city name inside the template.
     });
-    
-    
-    aFunct(2, function(bits){
-        console.log(bits);  //callback eg
-    });
+      
 });
 
-function aFunct(number, callback){
-    var bit = number +1;   //callback experiment
-    callback(bit);
-};
