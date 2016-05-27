@@ -32,6 +32,8 @@ function getGeolocation(){
           }
         });
       });
+    }else{
+        alert("Geolocation has not been enabled! Please enable or set your location manually using the dropdown menu.");
     }
 }
 
