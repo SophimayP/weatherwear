@@ -18,7 +18,7 @@ select {
         -moz-appearance: none;
         cursor: pointer;
     }
-    
+
 #headBar{
     background-color: #4738D8;
     padding: 5px 0 5px 0;
@@ -132,20 +132,6 @@ select {
 
 .grid-item:hover {
   background: #2D1EC9;
-  cursor: move;
-}
-
-.grid-item.is-dragging,
-.grid-item.is-positioning-post-drag {
-  background: #E3B000;
-  z-index: 2;
-}
-
-.packery-drop-placeholder {
-  outline: 3px dashed hsla(0, 0%, 0%, 0.5);
-  outline-offset: -6px;
-  -webkit-transition: -webkit-transform 0.2s;
-          transition: transform 0.2s;
 }
 
 .othersImg{
