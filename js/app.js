@@ -33,7 +33,7 @@ function getGeolocation(){
         });
       }, function (error) { 
 	if (error.code == error.PERMISSION_DENIED)
-		console.log("Geolocation has not been enabled! Please enable or set your location manually using the dropdown menu.");
+		alert("Geolocation has not been enabled! Please enable or set your location manually using the dropdown menu.");
 	});
     }else{
         alert("Sorry your browser does not support geolocation! Please switch browsers or set your location manually using the dropdown menu.");
