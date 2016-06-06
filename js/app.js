@@ -1,5 +1,6 @@
 var globalData = {
     currentCity : null,
+    firstLoad: true,
     weatherData : {
         temperature: null,
         clothingLayers: null,
@@ -33,10 +34,10 @@ function getGeolocation(){
         });
       }, function (error) { 
         if (error.code == error.PERMISSION_DENIED)
-            alert("Geolocation has not been enabled! Please enable or set your location manually using the dropdown menu.");
+            alert("Geolocation has not been enabled! Please enable or set your location manually (click the location icon in the top right corner).");
         });
     }else{
-        alert("Sorry your browser does not support geolocation! Please switch browsers or set your location manually using the dropdown menu.");
+        alert("Sorry your browser does not support geolocation! Please switch browsers or set your location manually (click the location icon in the top right corner).");
     }
 }
 
@@ -70,7 +71,7 @@ function getWeatherData(){
 }
 
 function render(){
-    document.getElementById("barLocDisp").innerHTML = globalData.currentCity;
+    document.getElementById("cityDisp").innerHTML = globalData.currentCity;
     //Weather Display
     $("#1").hide();
     $("#1to2").hide();
@@ -93,8 +94,7 @@ function render(){
     }else{
         $("#3to4").show();
     }
-    document.getElementById("barTempDisp").innerHTML = globalData.weatherData.temperature + '°';
-    document.getElementById("weatherDisp").innerHTML = "It's currently " + globalData.weatherData.temperature +" degrees in " + globalData.currentCity + ".";
+    document.getElementById("weatherDisp").innerHTML = "It's currently " + globalData.weatherData.temperature +" degrees.";
     document.getElementById("layersDisp").innerHTML = "MetService recommends " + globalData.weatherData.clothingLayers + " clothing layers and " + globalData.weatherData.windLayers + " windproof layers.";  
     if(globalData.weatherData.rain){
          document.getElementById("rainDisp").innerHTML = "There's been " + globalData.weatherData.rainFall + "mm of rainfall in the last three hours so you might want to take a raincoat.";
@@ -113,6 +113,9 @@ function render(){
         var imgSrc = '<img class="othersImg" src="images/outfits/' + result + '.png">'
         document.getElementsByClassName("entryImg")[i].innerHTML = imgSrc;
     });
+    if(globalData.firstLoad == false){
+           dispOthers(); //Stops clash when display others is called twice without data change making click big not work
+    }
 }
 
 
@@ -179,57 +182,67 @@ $(document).ready(function(){
         }
         getWeatherData();
         getFirebaseData();
+        $("#locatemenu").toggle();
     });
-    
-    //initial hide the three parts of the app
-    $("#metservData").hide();
+
+    //initial hide the three parts of the app and open metserv
+    $("#metservData").show();
     $("#enterData").hide();
     $("#othersData").hide();
-    $("#landingPage").show();
-    //when the logo is clicked go to the landing page
-    $("#logo").click(function(){
-        $("#landingPage").show();
-        $("#metservData").hide();
-        $("#enterData").hide();
-        $("#othersData").hide();
-    });
+    $("#helpAndAbout").hide();
+    $("#landingPage").hide();
+    $("#locatemenu").hide();
+    $("#metServBtn").addClass("tabActive");
+    $("#enterDataBtn").removeClass("tabActive");
+    $("#dispOthersBtn").removeClass("tabActive");
+    
     //when the respective button is pushed show the element and hide the others
+    $("#locateImg").click(function(){
+        $("#locatemenu").toggle();
+    });
+    
+    $("#helpImg").click(function(){
+        $("#helpAndAbout").show();
+        $("#metservData").hide();
+        $("#othersData").hide();
+        $("#enterData").hide();
+        $("#metServBtn").removeClass("tabActive");
+        $("#enterDataBtn").removeClass("tabActive");
+        $("#metServBtn").removeClass("tabActive");
+    });
     $("#metServBtn").click(function(){
         $("#metservData").show();
         $("#enterData").hide();
         $("#othersData").hide();
-        $("#landingPage").hide();
+        $("#helpAndAbout").hide();
+        $("#metServBtn").addClass("tabActive");
+        $("#enterDataBtn").removeClass("tabActive");
+        $("#dispOthersBtn").removeClass("tabActive");
     });
     $("#enterDataBtn").click(function(){
         $("#enterData").show();
         $("#metservData").hide();
+        $("#helpAndAbout").hide();
         $("#othersData").hide();
-        $("#landingPage").hide();
+        $("#metServBtn").removeClass("tabActive");
+        $("#enterDataBtn").addClass("tabActive");
+        $("#dispOthersBtn").removeClass("tabActive");
     });
     $("#dispOthersBtn").click(function(){
         $("#othersData").show();
         $("#enterData").hide();
+        $("#helpAndAbout").hide();
         $("#metservData").hide();
-        $("#landingPage").hide();
-        $( ".anEntry" ).addClass( "grid-item" );
-        var $grid = $('.grid').packery({
-          itemSelector: '.grid-item',
-          gutter: 0,
-          columnWidth: 100
-        });
-        $grid.on( 'click', '.grid-item', function( event ) {
-          // change size of item by toggling large class
-          $(  event.currentTarget  ).toggleClass('grid-item--width2');
-          // trigger layout after item size changes
-          $grid.packery('layout');
-        });
-//        $(".grid-item").hover(function() {
-//          // change size of item by toggling large class
-//          $(this).toggleClass('grid-item--width2');
-//          // trigger layout after item size changes
-//          $grid.packery('layout');
-//        });
+        $("#metServBtn").removeClass("tabActive");
+        $("#enterDataBtn").removeClass("tabActive");
+        $("#dispOthersBtn").addClass("tabActive");
+        if(globalData.firstLoad == true){
+           dispOthers(); 
+           globalData.firstLoad = false; //Stops clash when display others is called twice without data change making click big not work
+        }
     });
+    
+    
     
     $("#submit").click(function(){
         var cityLower = globalData.currentCity;
@@ -248,3 +261,24 @@ $(document).ready(function(){
       
 });
 
+function dispOthers(){
+        $( ".anEntry" ).addClass( "grid-item" );
+        var $grid = $('.grid').packery({
+          itemSelector: '.grid-item',
+          gutter: 0,
+          percentPosition: true,
+          columnWidth: 100
+        });
+        $grid.on( 'click', '.grid-item', function( event ) {
+          // change size of item by toggling large class
+          $(  event.currentTarget  ).toggleClass('grid-item--width2');
+          // trigger layout after item size changes
+          $grid.packery('layout');
+        });
+//        $(".grid-item").hover(function() {
+//          // change size of item by toggling large class
+//          $(this).toggleClass('grid-item--width2');
+//          // trigger layout after item size changes
+//          $grid.packery('layout');
+//        });
+    }
