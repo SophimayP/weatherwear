@@ -1,117 +1,136 @@
-/* ------------ MAIN ------------ */
-select {
-        position: absolute;
-        margin: 0;
-        margin-left: 50%;
-        left: -45%;
-        width: 90%;
-        border-radius: 0;
-        padding: 5px;
-        padding-left: 9px;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-size: 10pt;
-        font-weight: 700;
-        color: white;
-        background-color: #36B3FF;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        cursor: pointer;
-    }
+/* ------------ Color Palette ------------ */
 
-#headBar{
-    background-color: #4738D8;
-    padding: 5px 0 5px 0;
+/* 
+Yellow #FFD43D
+Light Yellow #FFF3C8
+Blue #006EEE
+Light Blue #9cbee6
+*/
+
+/* ------------ MAIN ------------ */
+
+.dropdown {
+    position: relative;
+    display: inline-block;
 }
+
+.dropdown-content {
+    right: 0;
+    top: 56px;
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 2px 6px 1px rgba(0,0,0,0.35);
+    padding: 12px 12px;
+    z-index: 900;
+    border: 2px solid #006EEE;
+    color: #006EEE;
+}
+
+.dropdown-content {
+    display: block;
+}
+
+
+#topNav{
+   z-index: 1000;
+   position:fixed;
+   left:0px;
+   top:0px;
+   height:58px;
+   width:100%;
+   background: #006EEE;
+   box-shadow: 0px 2px 6px 1px rgba(0,0,0,0.35);
+}
+
+.topSection{
+    width:40%;
+    height:58px;
+    float:left;
+}
+
+.topButton{
+    display: block;
+    float: right;
+    padding-top: 9px;
+}
+
+#helpImg{
+    height: 40px;
+    padding-right: 15px;
+}
+
+#locateImg{
+    height: 40px;
+    padding-right: 5px;
+}
+
+#logoSection{
+    width:20%;
+    height:58px;
+    float:left;
+}
+
+#cityDisp{
+    font-size: 20px;
+    padding: 13px 15px;
+    color: white;
+}
+
 #logo{
     display: block;
-    margin: 0 auto;
-    width: 30%;
+    margin: auto;
+    height: 100%;
 }
-.headBarTxt{
-    text-align: center;
-    color: white;
-    font-size: 1em;
+
+#bottomNav {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:58px;
+   width:100%;
+   background: #FFD43D;
+   box-shadow: 0px -2px 6px 1px rgba(0,0,0,0.35);
 }
-#navBar{
-    background-color: white;
-    width:100%;
-    padding-top: 5px;
-    padding-bottom: 5px;
+
+.tab{
+    width:33.33%;
+    height: 58px;
+    float:left;
 }
-#navContain{
-    width: 90%;
-    margin: 0 auto;
+.tab:hover{
+    background: #006EEE;
 }
-.navBtn{
-    width:30%;
-    display: inline-block;
-    float: left;
-    margin: 1.66%;
-    text-align: center;
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    border-radius: 20px; /* future proofing */
-    background-color: #FFCE25;
-    padding-top: 3px;
-    -webkit-box-shadow: 10px 10px 11px -5px rgba(0,0,0,0.75);
-    -moz-box-shadow: 10px 10px 11px -5px rgba(0,0,0,0.75);
-    box-shadow: 10px 10px 11px -5px rgba(0,0,0,0.75);
+.tabActive{
+    background: #006EEE;
 }
 .navImg{
-    width:100%;
-}
-.navImg:hover{
-    opacity: 0.6;
-}
-#stretchCon{
-    clear: left;
+    display: block;
+    margin: auto;
+    height: 100%;
 }
 
-#landingPage{
+#contents{
+    margin-top: 60px;
+    margin-bottom: 58px;
+    color: #006EEE;
     text-align: center;
-    background-color: #7B70EE;
-    padding: 2% 2%;
-    color: white;
-}
-
-#metservData{
-    text-align: center;
-    background-color: #7B70EE;
     padding: 1%;
-    color: white;
+    line-height: 1.2;
 }
 
-#othersData{
-    text-align: center;
-    background-color: #7B70EE;
-    padding: 1%;
-    color: white;
-}
-
-#enterData{
-    text-align: center;
-    background-color: #7B70EE;
-    padding: 1%;
-    color: white;
-}
 .oImg{
     width: 100px;
-}
-
-#footerBar{
-    text-align: center;
-    color: #4738D8;
-    padding: 1%;
 }
 
 
 /* ------------ GRID FOR OTHERS DATA ------------ */
 .grid {
-/*  background: #DDD;*/
   max-width: 100%;
   margin: 10px auto;
 }
+
 /* clear fix */
 .grid:after {
   content: '';
@@ -120,19 +139,19 @@ select {
 }
 
 .grid-item {
-  float: left;
-  width: 7%;
-/*  height: 100px;*/
-/*  background: #C09;*/
-/*  border: 2px solid hsla(0, 0%, 0%, 0.5);*/
+  width: 15%;
+  font-size: 0;
 }
 
-.grid-item--width2 { width: 200px; }
-.grid-item--height2 { height: 200px; }
+.grid-item--width2 { 
+    width: 200px; 
+    font-size: 1em;
+}
 
 .grid-item:hover {
-  background: #2D1EC9;
-    cursor: pointer;
+  border-radius: 25px;
+  border: 2px solid #006EEE;
+  cursor: pointer;
 }
 
 .othersImg{
@@ -153,9 +172,9 @@ input[type='range'] {
 .rangeslider__fill {
   cursor: pointer;
   box-shadow: 1.2px 1.2px 3.7px #4738D8, 0px 0px 1.2px #4738D8;
-  background: #4738D8;
+  background: #006EEE;
   border-radius: 25px;
-  border: 0px solid #4738D8;
+  border: 0px solid #006EEE;
 }
 
 .rangeslider__handle {
@@ -178,9 +197,9 @@ input[type="checkbox"] + label {
     width:30px;
     height:30px;
     vertical-align:middle;
-    background-color: #7B70EE;
+    background-color: #9cbee6;
     cursor:pointer;
-    border: 3px solid #4738D8;
+    border: 3px solid #006EEE;
     -moz-border-radius: 50px;
     -webkit-border-radius: 50px;
     border-radius: 50px; /* future proofing */
@@ -195,25 +214,10 @@ input[type="checkbox"]:checked + label {
 /* ------------ MOBILE QUERIES ----------- */
 /* Larger than mobile */
 @media (min-width: 400px) {
-    #logo{
-        width: 50%;
-    }
-    .headBarTxt{
-        font-size: 1.5em;
-    }
-    #navContain{
-        width: 80%;
-    }
 }
 
 /* Larger than phablet */
 @media (min-width: 550px) {
-    .headBarTxt{
-        font-size: 2em;
-    }
-    #navContain{
-        width: 50%;
-    }
     .grid {
       max-width: 90%;
     }
@@ -221,16 +225,10 @@ input[type="checkbox"]:checked + label {
 
 /* Larger than tablet */
 @media (min-width: 750px) {
-    #logo{
-        width: 30%;
-    }
-    #navContain{
-        width: 30%;
-    }
     #sliderBox{
         width: 40%;
     }
-    #landingPage{
+    #contents{
         padding: 2% 20%;
     }
     .grid {
