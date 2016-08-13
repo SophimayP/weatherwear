@@ -159,9 +159,11 @@ Light Blue #9cbee6
 }
 
 /* ------------ SLIDER ------------ */
+
 #sliderBox{
     width: 90%;
-    margin: 2% auto;
+    margin: 1% auto;
+    padding-top: 20px;
 }
 
 .rangeslider,
